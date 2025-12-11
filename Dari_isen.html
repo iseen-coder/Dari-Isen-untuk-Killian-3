@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan Spesial untuk Killian</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS yang Anda berikan dimasukkan di sini */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #4da3ff;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* HEART */
+        .heart {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            cursor: pointer;
+        }
+
+        .heart img {
+            width: 85px;
+            animation: beat 2s ease-in-out infinite;
+        }
+
+        @keyframes beat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* SPARKLES */
+        #sparkleContainer {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .sparkle {
+            position: absolute;
+            font-size: 20px;
+            animation: sparkleFade 1s linear forwards;
+        }
+
+        @keyframes sparkleFade {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-40px) scale(0.5); }
+        }
+
+        /* ENVELOPE POPUP */
+        #letterWrapper {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.35);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.6s ease;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        #letterWrapper.active {
+            bottom: 0;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Envelope */
+        .envelope {
+            width: 240px;
+            height: 170px;
+            position: relative;
+            cursor: pointer;
+            animation: pop 0.5s ease;
+        }
+
+        .envelope .top {
+            width: 100%;
+            height: 50%;
+            background: #fff;
+            position: absolute;
+            top: 0;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .envelope .bottom {
+            width: 100%;
+            height: 50%;
+            background: #e2e2e2;
+            position: absolute;
+            bottom: 0;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* LETTER CONTENT */
+        .letter {
+            display: none;
+            background: white;
+            width: 80%;
+            max-width: 350px;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: left;
+            animation: pop 0.5s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #4da3ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="heart" onclick="openLetter()">
+      <img id="heartImg" src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f499.svg">
+    </div>
+
+    <div id="sparkleContainer"></div>
+
+    <div id="letterWrapper">
+      <div class="envelope" onclick="openEnvelope()">
+          <div class="top"></div>
+          <div class="bottom"></div>
+      </div>
+
+      <div class="letter" id="letterContent">
+        <p id="typedText"></p>
+        <button onclick="closeLetter()">Close</button>
+      </div>
+    </div>
+
+    <script>
+        function openLetter() {
+            let heart = document.getElementById("heartImg");
+
+            // HEART CHANGE TO 💘 FOR A MOMENT
+            heart.src = "https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f498.svg";
+            setTimeout(() => {
+                heart.src = "https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/2764.svg";
+            }, 500);
+
+            // sparkles
+            for (let i = 0; i < 12; i++) createSparkle();
+
+            document.getElementById("letterWrapper").classList.add("active");
+        }
+
+        function createSparkle() {
+            let sparkle = document.createElement("div");
+            sparkle.classList.add("sparkle");
+            sparkle.innerHTML = "✨";
+
+            sparkle.style.left = (window.innerWidth / 2 - 10 + Math.random() * 40 - 20) + "px";
+            sparkle.style.top  = (window.innerHeight / 2 - 10 + Math.random() * 40 - 20) + "px";
+
+            document.getElementById("sparkleContainer").appendChild(sparkle);
+
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+
+        function openEnvelope() {
+            document.querySelector(".envelope").style.display = "none";
+
+            let letter = document.getElementById("letterContent");
+            letter.style.display = "block";
+
+            // TEXT YOU REQUESTED ❤️
+            let text = 
+        `For My Sayang, Killian :]]
+
+        I just wanted to say thank you for today. You did your best, and I’m genuinely proud of you.
+
+        Even on days that feel heavy or chaotic, you still show up. You still try.
+        And that means more than you know.
+
+        I hope you rest well tonight,
+        and I hope you remember that someone out there is quietly cheering for you—Isen. I love you ♡`;
+
+            let i = 0;
+            let speed = 25;
+            let typedTextElement = document.getElementById("typedText");
+
+            function type() {
+                if (i < text.length) {
+                    typedTextElement.innerHTML += text[i].replace(/\n/g, '<br>'); // Mengganti newline dengan <br> agar ada baris baru
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            // Bersihkan dulu sebelum mengetik (jika fungsi dipanggil lagi)
+            typedTextElement.innerHTML = "";
+            type();
+        }
+
+        function closeLetter() {
+            document.getElementById("letterWrapper").classList.remove("active");
+            document.querySelector(".envelope").style.display = "block";
+            document.getElementById("letterContent").style.display = "none";
+            document.getElementById("typedText").innerHTML = "";
+        }
+    </script>
+
+</body>
+</html>
